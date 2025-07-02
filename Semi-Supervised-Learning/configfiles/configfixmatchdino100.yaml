@@ -1,0 +1,50 @@
+paths:
+  train_csv: '/home/woody/iwfa/iwfa111h/Supervised_Data/Splits/train_v2024-03-18.xlsx'
+  val_csv: '/home/woody/iwfa/iwfa111h/Supervised_Data/Splits/validation_v2024-03-18.xlsx'
+  test_csv: '/home/woody/iwfa/iwfa111h/Supervised_Data/Splits/test_v2024-03-18.csv'
+  image_dir: '/home/woody/iwfa/iwfa111h/Supervised_Data/linear_winding_images_with_labels'
+  unlabeled_image_dir: '/home/woody/iwfa/iwfa111h/unalablled_data'
+  checkpoint_dir: '/home/vault/iwfa/iwfa111h/checkpoints'  # Path to save checkpoints
+  best_model_dir: '/home/vault/iwfa/iwfa111h/models'  # Path to save best model
+  log_dir: '/home/vault/iwfa/iwfa111h/logs'
+  checkpoint_path: None
+
+algorithm: 'fixmatch'
+model_type: 'dinov2'
+
+
+params:
+  learning_rate: 1.0945670646293987e-06
+  threshold: 0.5
+
+hparams:
+  magnitude: 5
+  num_layers: 4
+  probability: 0.8099007435200308
+  mstd: 0.5295441773039291
+  increasing: 1
+
+transform_weights:
+  Rotate: 1.9804993482821527
+  ShearX: 0.4722139699731207
+  ShearY: 1.1958791371462671
+  TranslateXRel: 0.4675310792968769
+  TranslateYRel: 1.5767825356171676
+  ColorIncreasing: 1.2044268372415223
+  SharpnessIncreasing:  0.1882427785727857
+  AutoContrast: 2.7284005374115203
+  SolarizeIncreasing: 2.037113180545328
+  SolarizeAdd: 1.4856223360025531
+  ContrastIncreasing: 1.6823420918615013
+  BrightnessIncreasing: 0.90004325790474
+  Equalize:  0.7191981793835871
+  PosterizeIncreasing: 2.471358625346096
+  Invert: 2.11973209106841
+
+num_epochs: 50
+patience: 10
+run_num: 1
+batch_size: 8
+unlabeled_batch_size: 16
+num_classes: 3
+experiment_name: 'fixmtachdino_100%_run1'

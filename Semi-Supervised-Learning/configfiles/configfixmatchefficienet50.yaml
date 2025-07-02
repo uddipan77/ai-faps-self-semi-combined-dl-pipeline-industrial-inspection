@@ -1,0 +1,56 @@
+paths:
+  train_csv: '/home/woody/iwfa/iwfa111h/Supervised_Data/Percentage_Splits/train_v2024-03-18_50%.csv'
+  val_csv: '/home/woody/iwfa/iwfa111h/Supervised_Data/Splits/validation_v2024-03-18.xlsx'
+  test_csv: '/home/woody/iwfa/iwfa111h/Supervised_Data/Splits/test_v2024-03-18.csv'
+  image_dir: '/home/woody/iwfa/iwfa111h/Supervised_Data/linear_winding_images_with_labels'
+  unlabeled_image_dir: '/home/woody/iwfa/iwfa111h/unalablled_data'
+  checkpoint_dir: '/home/vault/iwfa/iwfa111h/checkpoints'  # Path to save checkpoints
+  best_model_dir: '/home/vault/iwfa/iwfa111h/models'  # Path to save best model
+  log_dir: '/home/vault/iwfa/iwfa111h/logs'
+  checkpoint_path: None
+
+  
+algorithm: 'fixmatch'
+model_type: 'Efficientnet'
+ 
+
+params:
+  learning_rate: 2.2516334795524528e-05
+  threshold: 0.8
+
+efficientnet_params:
+  fc_units: 512
+  dropout_rate: 0
+  layer_freeze_upto: 'features.0.1.bias'
+  
+hparams:
+  magnitude: 5
+  num_layers: 2
+  probability: 0.663058093139379
+  mstd: 0.9011069729524935
+  increasing: 1
+
+transform_weights:
+  Rotate: 0.3138548679902474
+  ShearX: 0.6169547426411094
+  ShearY: 0.5195212344104255
+  TranslateXRel: 0.18270214181008404
+  TranslateYRel: 0.019719830559869367
+  ColorIncreasing: 0.1815442194593339
+  SharpnessIncreasing: 0.905088933261563
+  AutoContrast: 0.030049483063113176
+  SolarizeIncreasing: 0.9641004358656675
+  SolarizeAdd: 0.05736194202814511
+  ContrastIncreasing: 0.8665325329634104
+  BrightnessIncreasing: 0.027931532167776996
+  Equalize: 0.8516126851110584
+  PosterizeIncreasing: 0.5192914763299947
+  Invert: 0.6906823293997819
+
+num_epochs: 100
+patience: 10
+run_num: 1
+batch_size: 8
+unlabeled_batch_size: 16
+num_classes: 3
+experiment_name: 'fixmtachefficientnet_50%_run1'
