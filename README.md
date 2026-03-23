@@ -1,11 +1,19 @@
-## A Comparative Assessment of Self- and Semi Supervised Learning as Well as Combined Approaches for Deep Learning Based Image Classification in Industrial Visual Inspection
+# AI-FAPS: Self-, Semi-, and Combined Deep Learning Pipeline
 
-```
-ai-faps-shouvik-chattopadhyay/
+Comparative pipeline for industrial visual inspection with three tracks:
+
+- Self-supervised learning
+- Semi-supervised learning
+- Combined logic (self-supervised backbone + semi-supervised training flow)
+
+## Project Structure
+
+```text
+ai-faps-self-semi-combined-dl-pipeline-industrial-inspection/
 ├── CombinationLogicFinal/
 │   ├── dataset/
 │   │   ├── __init__.py
-│   │   └── dataset.py
+│   │   └── datasets.py
 │   ├── hyperparameter_optimization/
 │   │   └── hpo.py
 │   ├── test/
@@ -14,190 +22,181 @@ ai-faps-shouvik-chattopadhyay/
 │   ├── train/
 │   │   ├── __init__.py
 │   │   └── train_combination.py
-│   ├── utils/
+│   └── utils/
+│       ├── __init__.py
+│       ├── checkpoint.py
+│       └── manualseedsutils.py
+├── Self-Supervised-Learning/
+│   ├── data/
 │   │   ├── __init__.py
-│   │   ├── checkpoint.py
-│   │   └── manualusedutils.py
-├── Self-Supervised Learning/
-│   │   ├── data/
-│   │   │   ├── __init__.py
-│   │   │   └── Dataset.py
-│   │   ├── modeling/
-│   │   │   ├── __init__.py
-│   │   │   ├── make_model.py
-│   │   │   └── train_validation_test.py
-│   │   ├── SSL_Pretrain/
-│   │   │   └── simdclr.py
-│   │   ├── Test/
-│   │   │   └── Test.py
-│   │   ├── Training/
-│   │   │   ├── Hyperparameter_optimization.py
-│   │   │   └── Train_supervised_downstream.py
-│   │   └── utils/
-│   │       ├── __init__.py
-│   │       └── Utils.py
-├──Semi-Supervised-Learning/
-├── configfiles/
-│   ├── configfixmatchdino10.yaml
-│   ├── configfixmatchdino25.yaml
-│   ├── configfixmatchdino50.yaml
-│   ├── configfixmatchdino100.yaml
-│   ├── configfixmatchefficient10.yaml
-│   ├── configfixmatchefficient25.yaml
-│   ├── configfixmatchefficient50.yaml
-│   ├── configfixmatchefficient100.yaml
-├── dataset/
-│   ├── __init__.py
-│   └── datasets.py
-├── models/
-│   ├── __init__.py
-│   ├── customdnnmodel.py
-│   ├── customefficientnet.py
-│   ├── custommodel.py
-│   ├── custommodelefficient.py
-│   └── inferenceefficient.py
-├── train/
-│   ├── __init__.py
-│   └── train.py
-├── utils/
-│   ├── __init__.py
-│   ├── checkpoint.py
-│   ├── manualusedutils.py
-│   └── mimatchutils.py
-├── main.py
+│   │   └── Dataset.py
+│   ├── modeling/
+│   │   ├── __init__.py
+│   │   ├── make_model.py
+│   │   └── train_validation_test.py
+│   ├── SSL_Pretrain/
+│   │   └── simclr.py
+│   ├── Test/
+│   │   └── Test.py
+│   ├── Training/
+│   │   ├── Hyperparameter_optimization.py
+│   │   └── Train_supervised_downstream.py
+│   └── utils/
+│       ├── __init__.py
+│       └── Utils.py
+├── Semi-Supervised-Learning/
+│   ├── main.py
+│   ├── configfiles/
+│   │   ├── configfixmatchdino10.yaml
+│   │   ├── configfixmatchdino25.yaml
+│   │   ├── configfixmatchdino50.yaml
+│   │   ├── configfixmatchdino100.yaml
+│   │   ├── configfixmatchefficienet10.yaml
+│   │   ├── configfixmatchefficienet25.yaml
+│   │   ├── configfixmatchefficienet50.yaml
+│   │   └── configfixmatchefficienet100.yaml
+│   ├── dataset/
+│   ├── models/
+│   ├── testing/
+│   ├── train/
+│   └── utils/
 ├── .gitignore
-````
-
-## Usage
+└── README.md
 ```
-git clone https://github.com/andi677/ai-faps-shouvik-chattopadhyay.git
-cd ai-faps-shouvik-chattopadhyay
 
-````
+## Quick Start
 
-## Installation Instructions
-
-### Create and Activate the Conda Environment
-
-1. **Ensure Conda is installed**: If Conda is not installed, download and install it from the [official Anaconda website](https://www.anaconda.com/products/individual).
-
-2. **Create the Environment**: Run the following command to create the environment from the `environment.yaml` file:
+### 1) Clone and enter project
 
 ```bash
-conda env create -f environment.yaml
-conda activate env1
+git clone <your-repository-url>
+cd ai-faps-self-semi-combined-dl-pipeline-industrial-inspection
 ```
 
+### 2) Create environment (example)
 
-### Combination Logic
+```bash
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# Linux/macOS
+source .venv/bin/activate
+```
+
+### 3) Install core dependencies
+
+```bash
+pip install torch torchvision timm optuna pandas scikit-learn pillow pyyaml lightly tqdm numpy openpyxl
+```
+
+## Module Usage
+
+### Combination Logic (`CombinationLogicFinal`)
+
+Run from inside `CombinationLogicFinal`:
+
+```bash
+cd CombinationLogicFinal
+```
+
+#### Hyperparameter Optimization
+
+```bash
+python hyperparameter_optimization/hpo.py \
+    --study_name <study_name> \
+    --storage sqlite:///fixmatch_hpo.db \
+    --data_dir <path_to_images> \
+    --unlabeled_data_dir <path_to_unlabeled_images> \
+    --train_csv <path_to_train_csv> \
+    --val_csv <path_to_val_excel> \
+    --selfsup_model_path <path_to_ssl_backbone> \
+    --output_dir <path_to_output_dir> \
+    --n_trials 50
+```
+
+#### Train with Best Optuna Trial
+
+```bash
+python train/train_combination.py \
+    --study_name <study_name> \
+    --storage sqlite:///fixmatch_hpo.db \
+    --experiment_name <experiment_name> \
+    --output_dir <path_to_output_dir> \
+    --data_dir <path_to_images> \
+    --unlabeled_data_dir <path_to_unlabeled_images> \
+    --train_csv <path_to_train_csv> \
+    --val_csv <path_to_val_excel> \
+    --selfsup_model_path <path_to_ssl_backbone>
+```
+
+#### Inference
+
+```bash
+python test/inference_combination.py
+```
+
+### Self-Supervised Learning (`Self-Supervised-Learning`)
+
+Run from inside `Self-Supervised-Learning`:
+
+```bash
+cd Self-Supervised-Learning
+```
+
+#### SimCLR Pretraining
+
+```bash
+python SSL_Pretrain/simclr.py
+```
+
+#### Downstream Supervised Training
+
+```bash
+python Training/Train_supervised_downstream.py \
+    --expriment_number <run_id> \
+    --model efficientnet_v2_s \
+    --experiment_name <experiment_name> \
+    --train_csv <path_to_train_csv>
+```
+
+#### Hyperparameter Optimization
+
+```bash
+python Training/Hyperparameter_optimization.py \
+    --model_name efficientnet_v2_s \
+    --experiment_name <experiment_name> \
+    --training_dataset <path_to_training_csv>
+```
+
+#### Inference
+
+```bash
+python Test/Test.py
+```
+
+### Semi-Supervised Learning (`Semi-Supervised-Learning`)
+
+Run from inside `Semi-Supervised-Learning`:
+
+```bash
+cd Semi-Supervised-Learning
+```
 
 #### Training
 
-To start training, load the hyperparameters from the sqlite file. Then use the following commands:
+```bash
+python main.py --config configfiles/configfixmatchdino10.yaml
+```
 
-```python
-python3 train_combination.py \
-    --experiment_name <experiment_name> \
-    --output_dir <path_to_output_directory> \
-    --study_name <study_name> \
-    --storage <database_connection_string> \
-    --data_dir <path_to_supervised_data> \
-    --unlabeled_data_dir <path_to_unlabeled_data> \
-    --train_csv <path_to_train_csv> \
-    --val_csv <path_to_validation_csv> \
-    --selfsup_model_path <path_to_pretrained_selfsupervised_model>
+#### Inference
 
-````
-#### Hyperparameter Optimization
+```bash
+python testing/inferencedino.py
+python testing/inference_efficienet.py
+```
 
-The search space for hyperparameter tuning has already been defined. To run the optimization, simply load the model and adjust the training hyperparameters if required. Then, execute the script:
+## Notes
 
-```python
-
-python3 hpo.py \
-    --data_dir <path_to_supervised_data> \
-    --unlabeled_data_dir <path_to_unlabeled_data> \
-    --train_csv <path_to_train_csv> \
-    --val_csv <path_to_validation_csv> \
-    --selfsup_model_path <path_to_pretrained_selfsupervised_model> \
-    --output_dir <path_to_output_directory> \
-    --n_trials <number_of_trials> \
-    --study_name <study_name> \
-    --storage <database_connection_string> \
-    --direction <maximize_or_minimize>
-
-````
-
-#### Inference ####
-
-To run the inference, execute the script:
-
-```python
-
-python3 inference_combination.py
-
-````
-
-### Self-Supervised-Learning
-
-#### Pretraining
-
-To start pretraining, use the following commands:
-
-```python
-
-python3 SSL_Pretrain/simclr.py
-
-````
-
-#### Downstream Process
-
-To start downstream training, use the following commands:
-
-1. **Load Hyperparameters:**
-- In the `Train_supervised_downstream.py` script, load the best hyperparameters recommended by the Optuna study into the `config_dict`. Configure any additional training hyperparameters as needed.
-2. **Run Training:**
-- Execute the script:
-```python
-python3 Training/Train_supervised_downstream.py
-
-````
-
-#### Hyperparameter Optimization
-
-The search space for hyperparameter tuning has already been defined.  To run the optimization, simply load the backbone model and adjust the training hyperparameters within the script. Then, execute the script:
-```python
-# For HYO of SL trained and SSL pretrained models
-python3 Training/Hyperparameter_optimization.py
-
-````
-
-#### Inference ####
-
-To run the inference, execute the script:
-
-```python
-
-python3 Test/Test.py
-
-````
-
-### Semi-Supervised-Learning
-
-#### Training ####
-
-To start training, use the main.py and the path to the specific config file to run. All hyperparameters from the optuna as well as the path for the data, labels and other parameters are to be changed in the config file.
-
-```python
-
-python3 multilabel/main.py --config /pathtoconfig.yaml
-
-````
-
-#### Inference ####
-
-To run inference of the model on the test data, copy the path of the best model and paste in the best_model_path for the respective backbone model. Then run
-
-```python
-python3 multilabel/testing/inferencedino.py
-````
+- Several scripts include hard-coded dataset/model paths; update them for your environment before running.
+- Some workflows expect `.xlsx` files (install `openpyxl`, included above).
+- For reproducibility, set fixed seeds and keep experiment outputs in dedicated directories.
